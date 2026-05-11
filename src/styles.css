@@ -326,3 +326,56 @@
     transform: scale(1);
   }
 }
+
+/* ── Invite: single-screen layout ── */
+
+/*
+ * The invite fills exactly one screen using dvh (dynamic viewport height).
+ * Content is distributed evenly using space-between so no single area
+ * feels cramped while others have dead space.
+ */
+.invite-screen {
+  height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 28rem;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 0.5rem 1.25rem env(safe-area-inset-bottom, 0.75rem);
+}
+
+.invite-portrait {
+  width: min(44vw, 11rem);
+}
+
+/* sm breakpoint */
+@media (min-width: 640px) {
+  .invite-layout {
+    max-width: 36rem;
+    padding: 1rem 2rem 1rem;
+  }
+  .invite-portrait {
+    width: min(36vw, 16rem);
+  }
+}
+
+/* lg breakpoint */
+@media (min-width: 1024px) {
+  .invite-layout {
+    max-width: 48rem;
+    padding: 1.5rem 2rem 1.5rem;
+  }
+  .invite-portrait {
+    width: min(24vw, 20rem);
+  }
+}
