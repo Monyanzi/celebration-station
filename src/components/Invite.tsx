@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-} from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Calendar, ArrowUpRight, CalendarPlus, Navigation } from "lucide-react";
 /**
  * ✏️  To change the portrait, replace the file at src/assets/joyce-kawesa.jpg
@@ -215,10 +212,11 @@ export default function Invite() {
 
       {/* ── SINGLE-SCREEN LAYOUT ── */}
       <div className="invite-layout relative z-10">
-
         {/* ─ ROW 1: Header ─ */}
         <div className="flex w-full items-center justify-between px-5 sm:px-8">
-          <span className="hairline text-[8px] text-muted-foreground sm:text-[10px]">Est. 1936</span>
+          <span className="hairline text-[8px] text-muted-foreground sm:text-[10px]">
+            Est. 1936
+          </span>
           <span className="hairline text-[8px] text-muted-foreground sm:text-[10px]">№ 90</span>
         </div>
 
@@ -326,7 +324,10 @@ export default function Invite() {
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
               {/* When */}
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 shrink-0 text-[color:var(--gold-deep)]" strokeWidth={1.3} />
+                <Calendar
+                  className="h-4 w-4 shrink-0 text-[color:var(--gold-deep)]"
+                  strokeWidth={1.3}
+                />
                 <div>
                   <p className="font-serif-display text-[13px] font-medium text-[color:var(--violet-deep)] leading-tight sm:text-sm">
                     Sun, May 31
@@ -345,7 +346,10 @@ export default function Invite() {
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2"
               >
-                <MapPin className="h-4 w-4 shrink-0 text-[color:var(--gold-deep)]" strokeWidth={1.3} />
+                <MapPin
+                  className="h-4 w-4 shrink-0 text-[color:var(--gold-deep)]"
+                  strokeWidth={1.3}
+                />
                 <div>
                   <p className="font-serif-display text-[13px] font-medium text-[color:var(--violet-deep)] leading-tight sm:text-sm">
                     {VENUE_NAME}
@@ -379,14 +383,14 @@ export default function Invite() {
                     String(u.v)
                       .padStart(2, "0")
                       .split("")
-                      .map((ch, idx) => (
-                        <AnimatedDigit key={idx} value={ch} />
-                      ))
+                      .map((ch, idx) => <AnimatedDigit key={idx} value={ch} />)
                   ) : (
                     <span className="opacity-30">--</span>
                   )}
                 </div>
-                <div className="hairline mt-0.5 text-[7px] text-muted-foreground sm:text-[8px]">{u.l}</div>
+                <div className="hairline mt-0.5 text-[7px] text-muted-foreground sm:text-[8px]">
+                  {u.l}
+                </div>
               </div>
             ))}
           </div>
