@@ -7,14 +7,7 @@ import {
   useMotionValueEvent,
   AnimatePresence,
 } from "motion/react";
-import {
-  MapPin,
-  Calendar,
-  Heart,
-  ArrowUpRight,
-  CalendarPlus,
-  Navigation,
-} from "lucide-react";
+import { MapPin, Calendar, Heart, ArrowUpRight, CalendarPlus, Navigation } from "lucide-react";
 /**
  * ✏️  To change the portrait, replace the file at src/assets/joyce-kawesa.jpg
  *     (or drop a new file in src/assets/ and update the path below).
@@ -34,10 +27,9 @@ const RSVP_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSc0KofNVIKDYWuQfUw-_fi7hlzA7Eits8XEG_U4R2YBOerMMA/viewform";
 
 const VENUE_NAME = "Forcey Bible Church";
-const VENUE_ADDRESS =
-  "2130 E Randolph Rd, Silver Spring, MD 20904, United States";
+const VENUE_ADDRESS = "2130 E Randolph Rd, Silver Spring, MD 20904, United States";
 const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  `${VENUE_NAME}, ${VENUE_ADDRESS}`
+  `${VENUE_NAME}, ${VENUE_ADDRESS}`,
 )}`;
 
 const EVENT_DATE = new Date("2026-05-31T15:00:00-04:00");
@@ -78,9 +70,7 @@ const ICS_CONTENT = [
   "END:VEVENT",
   "END:VCALENDAR",
 ].join("\r\n");
-const ICS_HREF = `data:text/calendar;charset=utf-8,${encodeURIComponent(
-  ICS_CONTENT
-)}`;
+const ICS_HREF = `data:text/calendar;charset=utf-8,${encodeURIComponent(ICS_CONTENT)}`;
 
 const DETAILS = [
   {
@@ -124,18 +114,8 @@ function useCountdown(target: Date) {
 
 const Ornament = ({ className = "" }: { className?: string }) => (
   <svg viewBox="0 0 200 20" className={className} aria-hidden>
-    <path
-      d="M0 10 H80 M120 10 H200"
-      stroke="currentColor"
-      strokeWidth="0.6"
-      fill="none"
-    />
-    <g
-      transform="translate(100 10)"
-      stroke="currentColor"
-      strokeWidth="0.6"
-      fill="none"
-    >
+    <path d="M0 10 H80 M120 10 H200" stroke="currentColor" strokeWidth="0.6" fill="none" />
+    <g transform="translate(100 10)" stroke="currentColor" strokeWidth="0.6" fill="none">
       <circle r="4" />
       <circle r="1.2" fill="currentColor" />
       <path d="M-12 0 L-6 -3 L-6 3 Z" />
@@ -207,8 +187,7 @@ function MagneticButton({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY } = e;
-    const { height, width, left, top } =
-      e.currentTarget.getBoundingClientRect();
+    const { height, width, left, top } = e.currentTarget.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
     setPosition({ x: middleX * 0.15, y: middleY * 0.15 });
@@ -241,14 +220,19 @@ function CalendarDrawerInner({ variant = "full" }: { variant?: "full" | "compact
         <DrawerDescription className="text-center text-sm text-muted-foreground mb-8">
           Add Joyce's 90th Birthday to your calendar
         </DrawerDescription>
-        <div className={`grid gap-3 ${variant === "full" ? "grid-cols-1 sm:grid-cols-2 max-w-md mx-auto" : "grid-cols-1"}`}>
+        <div
+          className={`grid gap-3 ${variant === "full" ? "grid-cols-1 sm:grid-cols-2 max-w-md mx-auto" : "grid-cols-1"}`}
+        >
           <a
             href={GCAL_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--violet)]/15 bg-white/50 px-6 py-4 text-sm font-medium text-[color:var(--violet-deep)] transition-all duration-200 hover:border-[color:var(--gold)] hover:bg-white/80 hover:shadow-sm active:scale-[0.98]"
           >
-            <Calendar className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:scale-110" strokeWidth={1.5} />
+            <Calendar
+              className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:scale-110"
+              strokeWidth={1.5}
+            />
             Google Calendar
           </a>
           <a
@@ -256,7 +240,10 @@ function CalendarDrawerInner({ variant = "full" }: { variant?: "full" | "compact
             download="joyce-kawesa-90th-birthday.ics"
             className="group flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--violet)]/15 bg-white/50 px-6 py-4 text-sm font-medium text-[color:var(--violet-deep)] transition-all duration-200 hover:border-[color:var(--gold)] hover:bg-white/80 hover:shadow-sm active:scale-[0.98]"
           >
-            <CalendarPlus className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:scale-110" strokeWidth={1.5} />
+            <CalendarPlus
+              className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:scale-110"
+              strokeWidth={1.5}
+            />
             Apple / Outlook (.ics)
           </a>
         </div>
@@ -282,8 +269,7 @@ export default function Invite() {
   const [showPill, setShowPill] = useState(true);
   useMotionValueEvent(scrollY, "change", (current) => {
     if (typeof window === "undefined") return;
-    const atBottom =
-      window.innerHeight + current >= document.body.offsetHeight - 200;
+    const atBottom = window.innerHeight + current >= document.body.offsetHeight - 200;
     if (atBottom) {
       setShowPill(true);
       return;
@@ -316,12 +302,8 @@ export default function Invite() {
 
       {/* Header bar */}
       <div className="relative z-10 flex items-center justify-between px-5 pt-6 sm:px-12 sm:pt-8">
-        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">
-          Est. 1936
-        </span>
-        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">
-          № 90
-        </span>
+        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">Est. 1936</span>
+        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">№ 90</span>
       </div>
 
       {/* ── HERO ── */}
@@ -338,10 +320,8 @@ export default function Invite() {
             alt="Joyce Kawesa, celebrating her 90th birthday"
             className="relative w-full mix-blend-multiply dark:mix-blend-screen"
             style={{
-              WebkitMaskImage:
-                "linear-gradient(to bottom, black 35%, transparent 92%)",
-              maskImage:
-                "linear-gradient(to bottom, black 35%, transparent 92%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 35%, transparent 92%)",
+              maskImage: "linear-gradient(to bottom, black 35%, transparent 92%)",
             }}
             loading="eager"
           />
@@ -382,9 +362,7 @@ export default function Invite() {
               className="font-serif-display mt-2 block text-2xl font-light text-[color:var(--violet-deep)] sm:mt-3 sm:text-5xl lg:text-6xl"
             >
               Birthday{" "}
-              <em className="font-display not-italic text-[color:var(--violet)]">
-                Celebration
-              </em>
+              <em className="font-display not-italic text-[color:var(--violet)]">Celebration</em>
             </motion.span>
           </motion.h1>
 
@@ -403,15 +381,12 @@ export default function Invite() {
             transition={{ type: "spring", stiffness: 50, damping: 20, delay: 0.8 }}
             className="mt-5 sm:mt-7"
           >
-            <p className="hairline text-[11px] text-muted-foreground">
-              Honoring
-            </p>
+            <p className="hairline text-[11px] text-muted-foreground">Honoring</p>
             <h2 className="font-display mt-3 text-5xl leading-none text-[color:var(--violet-deep)] sm:text-7xl lg:text-8xl">
               Joyce <span className="italic">Kawesa</span>
             </h2>
             <p className="font-serif-display mx-auto mt-5 max-w-md text-lg leading-relaxed italic text-[color:var(--violet-deep)]/80 sm:text-2xl sm:leading-snug">
-              Celebrating ninety beautiful years of love, faith and family.
-              Come rejoice with us!
+              Celebrating ninety beautiful years of love, faith and family. Come rejoice with us!
             </p>
           </motion.div>
         </div>
@@ -424,20 +399,13 @@ export default function Invite() {
             const Inner = (
               <>
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-[color:var(--gold)]/5">
-                  <d.icon
-                    className="h-5 w-5 text-[color:var(--gold-deep)]"
-                    strokeWidth={1.3}
-                  />
+                  <d.icon className="h-5 w-5 text-[color:var(--gold-deep)]" strokeWidth={1.3} />
                 </div>
-                <p className="hairline mt-5 text-[10px] text-muted-foreground">
-                  {d.label}
-                </p>
+                <p className="hairline mt-5 text-[10px] text-muted-foreground">{d.label}</p>
                 <p className="font-serif-display mt-2 text-2xl text-[color:var(--violet-deep)] sm:text-3xl">
                   {d.value}
                 </p>
-                <p className="mt-1 text-base text-muted-foreground sm:text-sm">
-                  {d.sub}
-                </p>
+                <p className="mt-1 text-base text-muted-foreground sm:text-sm">{d.sub}</p>
                 {d.cta && (
                   <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--violet)] underline-offset-4 transition-all duration-200 group-hover:underline group-hover:gap-2">
                     <Navigation className="h-4 w-4" strokeWidth={1.5} />
@@ -524,9 +492,7 @@ export default function Invite() {
                       <span className="opacity-30">--</span>
                     )}
                   </div>
-                  <div className="hairline mt-3 text-[10px] text-muted-foreground">
-                    {u.l}
-                  </div>
+                  <div className="hairline mt-3 text-[10px] text-muted-foreground">{u.l}</div>
                 </motion.div>
               ))}
             </div>
@@ -546,9 +512,7 @@ export default function Invite() {
           >
             <div className="absolute -inset-8 rounded-[40px] bg-gradient-violet opacity-[0.07] blur-3xl" />
             <div className="glass-panel relative rounded-[2rem] border border-[color:var(--gold)]/20 p-8 sm:p-12">
-              <p className="hairline text-[11px] text-[color:var(--gold-deep)]">
-                Kindly Respond
-              </p>
+              <p className="hairline text-[11px] text-[color:var(--gold-deep)]">Kindly Respond</p>
               <h3 className="font-display mt-4 text-3xl text-[color:var(--violet-deep)] sm:text-5xl">
                 Join the celebration
               </h3>
@@ -557,7 +521,10 @@ export default function Invite() {
               </p>
               <p className="mt-2 text-base leading-relaxed text-muted-foreground sm:text-[15px]">
                 Contact Monica at{" "}
-                <a href="tel:+13015004811" className="font-medium text-[color:var(--violet)] underline-offset-4 hover:underline">
+                <a
+                  href="tel:+13015004811"
+                  className="font-medium text-[color:var(--violet)] underline-offset-4 hover:underline"
+                >
                   301-500-4811
                 </a>
               </p>
@@ -570,9 +537,7 @@ export default function Invite() {
                   rel="noopener noreferrer"
                   className="group relative flex w-full items-center justify-between gap-4 rounded-full bg-gradient-violet px-8 py-5 text-primary-foreground shadow-gold transition-all duration-300 hover:shadow-[0_0_60px_oklch(0.74_0.13_80/0.6)] active:scale-[0.98]"
                 >
-                  <span className="hairline text-xs sm:text-sm">
-                    RSVP Now
-                  </span>
+                  <span className="hairline text-xs sm:text-sm">RSVP Now</span>
                   <ArrowUpRight
                     className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
                     strokeWidth={1.6}
@@ -592,9 +557,7 @@ export default function Invite() {
                         className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:scale-110"
                         strokeWidth={1.5}
                       />
-                      <span className="hairline text-[10px] sm:text-xs">
-                        Calendar
-                      </span>
+                      <span className="hairline text-[10px] sm:text-xs">Calendar</span>
                     </button>
                   </DrawerTrigger>
                   <DrawerContent className="bg-background/90 backdrop-blur-2xl border-t border-[color:var(--gold)]/20">
@@ -612,9 +575,7 @@ export default function Invite() {
                     className="h-4 w-4 text-[color:var(--gold-deep)] transition-transform duration-200 group-hover:translate-x-0.5"
                     strokeWidth={1.5}
                   />
-                  <span className="hairline text-[10px] sm:text-xs">
-                    Directions
-                  </span>
+                  <span className="hairline text-[10px] sm:text-xs">Directions</span>
                 </a>
               </div>
 
