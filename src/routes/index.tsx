@@ -1,26 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Invite from "@/components/Invite";
+import portrait from "@/assets/joyce-invite-reference.png";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Invite,
+  head: () => ({
+    meta: [
+      { title: "Joyce Kawesa — 90th Birthday Celebration · May 31, 2026" },
+      {
+        name: "description",
+        content:
+          "You are warmly invited to honor Joyce Kawesa on her 90th birthday — Sunday, May 31, 2026 at Forcey Bible Church. A life of love, faith and blessings.",
+      },
+      { property: "og:title", content: "Joyce Kawesa — 90th Birthday Celebration" },
+      {
+        property: "og:description",
+        content: "Sunday, May 31, 2026 · Forcey Bible Church · 3pm – 7pm",
+      },
+      { property: "og:image", content: portrait },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: portrait },
+    ],
+  }),
 });
-
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
-}
