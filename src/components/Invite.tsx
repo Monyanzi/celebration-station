@@ -56,18 +56,25 @@ const GCAL_URL =
   }).toString() +
   "&ctz=America/New_York";
 
+// Escape per RFC 5545: backslash, semicolon, comma, and newlines.
+const icsEscape = (s: string) =>
+  s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+const nowStamp = new Date()
+  .toISOString()
+  .replace(/[-:]/g, "")
+  .replace(/\.\d{3}/, "");
 const ICS_CONTENT = [
   "BEGIN:VCALENDAR",
   "VERSION:2.0",
   "PRODID:-//Kawesa Family//90th Birthday//EN",
   "BEGIN:VEVENT",
   "UID:joyce-kawesa-90-2026@invite",
-  "DTSTAMP:20260101T000000Z",
+  `DTSTAMP:${nowStamp}`,
   "DTSTART;TZID=America/New_York:20260531T150000",
   "DTEND;TZID=America/New_York:20260531T190000",
-  `SUMMARY:${EVENT_TITLE}`,
-  `LOCATION:${VENUE_NAME}\\, ${VENUE_ADDRESS}`,
-  `DESCRIPTION:${EVENT_DETAILS}`,
+  `SUMMARY:${icsEscape(EVENT_TITLE)}`,
+  `LOCATION:${icsEscape(`${VENUE_NAME}, ${VENUE_ADDRESS}`)}`,
+  `DESCRIPTION:${icsEscape(EVENT_DETAILS)}`,
   "END:VEVENT",
   "END:VCALENDAR",
 ].join("\r\n");
@@ -507,10 +514,12 @@ export default function Invite() {
                 >
                   <div className="font-display text-4xl font-light tracking-tight text-[color:var(--violet-deep)] tabular-nums sm:text-6xl">
                     {c.ready ? (
-                      <>
-                        <AnimatedDigit value={String(u.v).padStart(2, "0")[0]} />
-                        <AnimatedDigit value={String(u.v).padStart(2, "0")[1]} />
-                      </>
+                      String(u.v)
+                        .padStart(2, "0")
+                        .split("")
+                        .map((ch, idx) => (
+                          <AnimatedDigit key={idx} value={ch} />
+                        ))
                     ) : (
                       <span className="opacity-30">--</span>
                     )}
