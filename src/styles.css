@@ -101,8 +101,16 @@
   --gradient-parchment: radial-gradient(ellipse at top, oklch(0.97 0.03 305 / 0.6), transparent 60%),
                          radial-gradient(ellipse at bottom, oklch(0.95 0.04 80 / 0.5), transparent 60%),
                          var(--background);
-  --shadow-elegant: 0 30px 80px -20px oklch(0.28 0.14 300 / 0.35), 0 10px 30px -10px oklch(0.28 0.14 300 / 0.2);
-  --shadow-gold: 0 0 40px oklch(0.74 0.13 80 / 0.4);
+  --shadow-elegant: 
+    0 1px 2px oklch(0.28 0.14 300 / 0.08),
+    0 4px 8px oklch(0.28 0.14 300 / 0.08),
+    0 12px 24px oklch(0.28 0.14 300 / 0.1),
+    0 24px 48px -12px oklch(0.28 0.14 300 / 0.15),
+    0 48px 96px -24px oklch(0.28 0.14 300 / 0.25);
+  --shadow-gold: 
+    0 1px 3px oklch(0.74 0.13 80 / 0.1),
+    0 8px 24px oklch(0.74 0.13 80 / 0.2),
+    0 24px 60px oklch(0.74 0.13 80 / 0.4);
 
   --font-display: "Italiana", "Cormorant Garamond", serif;
   --font-serif: "Cormorant Garamond", serif;
@@ -183,9 +191,26 @@
   .bg-gradient-violet { background: var(--gradient-violet); }
   .shadow-elegant { box-shadow: var(--shadow-elegant); }
   .shadow-gold { box-shadow: var(--shadow-gold); }
-  .hairline { letter-spacing: 0.4em; text-transform: uppercase; }
+  .hairline { letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
 
-  /* Subtle parchment grain */
+  .glass-panel {
+    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 
+      inset 0 1px 1px rgba(255,255,255,0.6),
+      inset 0 0 0 1px rgba(255,255,255,0.3),
+      var(--shadow-elegant);
+  }
+  .dark .glass-panel {
+    background: linear-gradient(135deg, rgba(20,15,30,0.8), rgba(20,15,30,0.4));
+    box-shadow: 
+      inset 0 1px 1px rgba(255,255,255,0.1),
+      inset 0 0 0 1px rgba(255,255,255,0.05),
+      var(--shadow-elegant);
+  }
+
+  /* Subtle parchment grain — GPU-composited to avoid scroll repaint */
   .grain::before {
     content: "";
     position: fixed;
@@ -195,5 +220,66 @@
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     z-index: 100;
+    transform: translateZ(0);
+    will-change: transform;
   }
+
+  /* ── Shimmer on gold text ── */
+  .text-gold-shimmer {
+    background: linear-gradient(
+      90deg,
+      oklch(0.85 0.12 85) 0%,
+      oklch(0.65 0.16 70) 20%,
+      oklch(0.97 0.06 80) 40%,
+      oklch(0.78 0.14 78) 60%,
+      oklch(0.65 0.16 70) 80%,
+      oklch(0.85 0.12 85) 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+
+  /* ── Pulse glow for mobile CTA ── */
+  .pulse-cta {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  /* ── Gentle float ── */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* ── Countdown digit slot ── */
+  .digit-slot {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes shimmer {
+  0%, 100% { background-position: 200% center; }
+  50% { background-position: -200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.45 0.18 300 / 0.3); }
+  50% { box-shadow: 0 0 24px 6px oklch(0.45 0.18 300 / 0.12); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60% { transform: scale(1); }
 }
