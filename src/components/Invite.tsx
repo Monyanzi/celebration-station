@@ -1,11 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { MapPin, Calendar, Clock, Heart, ArrowUpRight } from "lucide-react";
+import { MapPin, Calendar, Clock, Heart, ArrowUpRight, CalendarPlus, Navigation } from "lucide-react";
 import portrait from "@/assets/joyce-invite-reference.png";
 
 const RSVP_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSc0KofNVIKDYWuQfUw-_fi7hlzA7Eits8XEG_U4R2YBOerMMA/viewform";
+
+const VENUE_NAME = "Forcey Bible Church";
+const VENUE_ADDRESS = "2130 E Randolph Rd, Silver Spring, MD 20904, United States";
+const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${VENUE_NAME}, ${VENUE_ADDRESS}`
+)}`;
+
+// May 31, 2026 · 3pm – 7pm America/New_York (EDT = UTC-4)
 const EVENT_DATE = new Date("2026-05-31T15:00:00-04:00");
+const EVENT_TITLE = "Joyce Kawesa's 90th Birthday Celebration";
+const EVENT_DETAILS =
+  "Please join us in honoring Joyce Kawesa on her 90th birthday — a life of love, faith and blessings. RSVP: " +
+  RSVP_URL;
+const GCAL_URL =
+  "https://calendar.google.com/calendar/render?" +
+  new URLSearchParams({
+    action: "TEMPLATE",
+    text: EVENT_TITLE,
+    dates: "20260531T190000Z/20260531T230000Z",
+    details: EVENT_DETAILS,
+    location: `${VENUE_NAME}, ${VENUE_ADDRESS}`,
+  }).toString();
+
+const ICS_CONTENT = [
+  "BEGIN:VCALENDAR",
+  "VERSION:2.0",
+  "PRODID:-//Kawesa Family//90th Birthday//EN",
+  "BEGIN:VEVENT",
+  "UID:joyce-kawesa-90-2026@invite",
+  "DTSTAMP:20260101T000000Z",
+  "DTSTART:20260531T190000Z",
+  "DTEND:20260531T230000Z",
+  `SUMMARY:${EVENT_TITLE}`,
+  `LOCATION:${VENUE_NAME}\\, ${VENUE_ADDRESS}`,
+  `DESCRIPTION:${EVENT_DETAILS}`,
+  "END:VEVENT",
+  "END:VCALENDAR",
+].join("\r\n");
+const ICS_HREF = `data:text/calendar;charset=utf-8,${encodeURIComponent(ICS_CONTENT)}`;
 
 function useCountdown(target: Date) {
   const [now, setNow] = useState<Date | null>(null);
@@ -16,21 +54,18 @@ function useCountdown(target: Date) {
   }, []);
   if (!now) return { d: 0, h: 0, m: 0, s: 0, ready: false };
   const diff = Math.max(0, target.getTime() - now.getTime());
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  return { d, h, m, s, ready: true };
+  return {
+    d: Math.floor(diff / 86400000),
+    h: Math.floor((diff % 86400000) / 3600000),
+    m: Math.floor((diff % 3600000) / 60000),
+    s: Math.floor((diff % 60000) / 1000),
+    ready: true,
+  };
 }
 
 const Ornament = ({ className = "" }: { className?: string }) => (
   <svg viewBox="0 0 200 20" className={className} aria-hidden>
-    <path
-      d="M0 10 H80 M120 10 H200"
-      stroke="currentColor"
-      strokeWidth="0.6"
-      fill="none"
-    />
+    <path d="M0 10 H80 M120 10 H200" stroke="currentColor" strokeWidth="0.6" fill="none" />
     <g transform="translate(100 10)" stroke="currentColor" strokeWidth="0.6" fill="none">
       <circle r="4" />
       <circle r="1.2" fill="currentColor" />
@@ -48,7 +83,7 @@ const Floral = ({ className = "" }: { className?: string }) => (
         <stop offset="100%" stopColor="oklch(0.45 0.18 300)" />
       </radialGradient>
     </defs>
-    <g opacity="0.55">
+    <g opacity="0.5">
       <circle cx="60" cy="70" r="42" fill="url(#rose)" />
       <circle cx="60" cy="70" r="22" fill="oklch(0.92 0.06 305)" opacity="0.7" />
       <circle cx="140" cy="40" r="26" fill="url(#rose)" opacity="0.85" />
@@ -72,31 +107,65 @@ const Floral = ({ className = "" }: { className?: string }) => (
 
 export default function Invite() {
   const c = useCountdown(EVENT_DATE);
+  const [calOpen, setCalOpen] = useState(false);
+
+  const details = useMemo(
+    () => [
+      {
+        icon: MapPin,
+        label: "Location",
+        value: VENUE_NAME,
+        sub: "2130 E Randolph Rd · Silver Spring, MD",
+        href: MAPS_URL,
+        cta: "Open in Maps",
+      },
+      {
+        icon: Calendar,
+        label: "Date",
+        value: "Sunday, May 31",
+        sub: "Two thousand twenty-six",
+        href: undefined,
+      },
+      {
+        icon: Clock,
+        label: "Time",
+        value: "3:00 — 7:00 pm",
+        sub: "Reception to follow",
+        href: undefined,
+      },
+      {
+        icon: Heart,
+        label: "Attire",
+        value: "Garden Formal",
+        sub: "Lavender encouraged",
+        href: undefined,
+      },
+    ],
+    []
+  );
 
   return (
     <main className="grain relative min-h-screen overflow-hidden">
-      {/* Floral corners */}
-      <Floral className="pointer-events-none absolute -left-16 -top-16 h-[28rem] w-[28rem] rotate-0" />
-      <Floral className="pointer-events-none absolute -right-16 -bottom-16 h-[28rem] w-[28rem] rotate-180" />
+      <Floral className="pointer-events-none absolute -left-20 -top-20 h-[18rem] w-[18rem] sm:h-[28rem] sm:w-[28rem]" />
+      <Floral className="pointer-events-none absolute -right-20 -bottom-20 h-[18rem] w-[18rem] rotate-180 sm:h-[28rem] sm:w-[28rem]" />
 
-      {/* Top hairline bar */}
-      <div className="relative z-10 flex items-center justify-between px-6 pt-8 sm:px-12">
-        <span className="hairline text-[10px] text-muted-foreground">
-          Est. 1936 · Honored Today
+      <div className="relative z-10 flex items-center justify-between px-5 pt-6 sm:px-12 sm:pt-8">
+        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">
+          Est. 1936
         </span>
-        <span className="hairline text-[10px] text-muted-foreground">
-          Invitation № 90
+        <span className="hairline text-[9px] text-muted-foreground sm:text-[10px]">
+          № 90
         </span>
       </div>
 
-      <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 pt-12 pb-24 sm:px-12 lg:grid-cols-12 lg:gap-16 lg:pt-20">
-        {/* Left: editorial */}
+      {/* HERO */}
+      <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 pt-10 pb-12 sm:px-12 sm:pt-16 lg:grid-cols-12 lg:gap-16 lg:pt-20 lg:pb-24">
         <div className="lg:col-span-7 lg:pt-8">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="hairline text-xs text-[color:var(--violet-deep)]"
+            className="hairline text-[11px] text-[color:var(--violet-deep)] sm:text-xs"
           >
             Please join us for a
           </motion.p>
@@ -105,16 +174,16 @@ export default function Invite() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.15 }}
-            className="font-display mt-6 leading-[0.85] tracking-tight"
+            className="font-display mt-4 leading-[0.85] tracking-tight sm:mt-6"
           >
             <motion.span
               initial={{ y: 60, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
-              className="block text-[24vw] leading-[0.8] sm:text-[18vw] lg:text-[14rem]"
+              className="block text-[42vw] leading-[0.8] sm:text-[18vw] lg:text-[14rem]"
             >
               <span className="text-gold">90</span>
-              <sup className="font-serif-display align-super text-[0.35em] text-[color:var(--violet-deep)]">
+              <sup className="font-serif-display align-super text-[0.32em] text-[color:var(--violet-deep)]">
                 th
               </sup>
             </motion.span>
@@ -122,7 +191,7 @@ export default function Invite() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.9, delay: 0.5 }}
-              className="font-serif-display mt-2 block text-4xl font-light text-[color:var(--violet-deep)] sm:text-5xl lg:text-6xl"
+              className="font-serif-display mt-3 block text-3xl font-light text-[color:var(--violet-deep)] sm:text-5xl lg:text-6xl"
             >
               Birthday{" "}
               <em className="font-display not-italic text-[color:var(--violet)]">
@@ -135,39 +204,38 @@ export default function Invite() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.9 }}
-            className="mt-10 flex items-center gap-4 text-[color:var(--gold-deep)]"
+            className="mt-8 flex items-center gap-4 text-[color:var(--gold-deep)]"
           >
-            <Ornament className="h-3 w-40" />
+            <Ornament className="h-3 w-32 sm:w-40" />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1 }}
-            className="mt-8"
+            className="mt-6 sm:mt-8"
           >
             <p className="hairline text-[11px] text-muted-foreground">Honoring</p>
-            <h2 className="font-display mt-3 text-6xl leading-none text-[color:var(--violet-deep)] sm:text-7xl lg:text-8xl">
+            <h2 className="font-display mt-3 text-5xl leading-none text-[color:var(--violet-deep)] sm:text-7xl lg:text-8xl">
               Joyce <span className="italic">Kawesa</span>
             </h2>
-            <p className="font-serif-display mt-6 max-w-md text-2xl italic leading-snug text-[color:var(--violet-deep)]/80">
+            <p className="font-serif-display mt-5 max-w-md text-xl italic leading-snug text-[color:var(--violet-deep)]/80 sm:text-2xl">
               A life of love, faith &amp; blessings — ninety years, gently held and
               graciously given.
             </p>
           </motion.div>
         </div>
 
-        {/* Right: framed portrait */}
         <motion.div
           initial={{ opacity: 0, y: 30, rotate: 2 }}
           animate={{ opacity: 1, y: 0, rotate: 1.2 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
           className="lg:col-span-5 lg:pt-12"
         >
-          <div className="relative mx-auto max-w-md">
+          <div className="relative mx-auto max-w-sm sm:max-w-md">
             <div className="absolute -inset-3 rounded-[2px] bg-gradient-violet opacity-20 blur-2xl" />
-            <div className="relative overflow-hidden border border-[color:var(--gold)]/40 bg-card p-3 shadow-elegant">
-              <div className="absolute inset-0 border border-[color:var(--gold)]/20 m-[10px]" />
+            <div className="relative overflow-hidden border border-[color:var(--gold)]/40 bg-card p-2 shadow-elegant sm:p-3">
+              <div className="absolute inset-0 m-[8px] border border-[color:var(--gold)]/20 sm:m-[10px]" />
               <img
                 src={portrait}
                 alt="Joyce Kawesa, honoree of the 90th birthday celebration"
@@ -175,72 +243,85 @@ export default function Invite() {
                 loading="eager"
               />
             </div>
-            <div className="mt-4 flex items-center justify-between px-2">
-              <span className="hairline text-[10px] text-muted-foreground">
-                Joyce, 2026
-              </span>
-              <span className="hairline text-[10px] text-[color:var(--gold-deep)]">
-                Ninety
-              </span>
+            <div className="mt-3 flex items-center justify-between px-2">
+              <span className="hairline text-[10px] text-muted-foreground">Joyce, 2026</span>
+              <span className="hairline text-[10px] text-[color:var(--gold-deep)]">Ninety</span>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Details */}
+      {/* DETAILS */}
       <section className="relative z-10 border-y border-[color:var(--gold)]/30 bg-secondary/40 backdrop-blur-sm">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[color:var(--gold)]/30 px-6 sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:px-12 lg:grid-cols-4">
-          {[
-            { icon: MapPin, label: "Location", value: "Forcey Bible Church", sub: "Sanctuary Hall" },
-            { icon: Calendar, label: "Date", value: "Sunday", sub: "May 31, 2026" },
-            { icon: Clock, label: "Time", value: "3:00 — 7:00 pm", sub: "Reception to follow" },
-            { icon: Heart, label: "Attire", value: "Garden Formal", sub: "Lavender encouraged" },
-          ].map((d, i) => (
-            <motion.div
-              key={d.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="px-6 py-10"
-            >
-              <d.icon className="h-5 w-5 text-[color:var(--gold-deep)]" strokeWidth={1.2} />
-              <p className="hairline mt-6 text-[10px] text-muted-foreground">{d.label}</p>
-              <p className="font-serif-display mt-2 text-2xl text-[color:var(--violet-deep)]">
-                {d.value}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">{d.sub}</p>
-            </motion.div>
-          ))}
+        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[color:var(--gold)]/30 px-5 sm:grid-cols-2 sm:px-12 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
+          {details.map((d, i) => {
+            const Inner = (
+              <>
+                <d.icon className="h-6 w-6 text-[color:var(--gold-deep)]" strokeWidth={1.3} />
+                <p className="hairline mt-5 text-[10px] text-muted-foreground">{d.label}</p>
+                <p className="font-serif-display mt-2 text-2xl text-[color:var(--violet-deep)] sm:text-3xl">
+                  {d.value}
+                </p>
+                <p className="mt-1 text-base text-muted-foreground sm:text-sm">{d.sub}</p>
+                {d.cta && (
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--violet)] underline-offset-4 group-hover:underline">
+                    <Navigation className="h-4 w-4" strokeWidth={1.5} />
+                    {d.cta}
+                  </span>
+                )}
+              </>
+            );
+            return (
+              <motion.div
+                key={d.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                className="px-6 py-8 sm:py-10"
+              >
+                {d.href ? (
+                  <a
+                    href={d.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  >
+                    {Inner}
+                  </a>
+                ) : (
+                  <div>{Inner}</div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
-      {/* Countdown + RSVP */}
-      <section className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:px-12">
-        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+      {/* COUNTDOWN + ACTIONS */}
+      <section className="relative z-10 mx-auto max-w-7xl px-5 py-16 sm:px-12 sm:py-24">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="hairline text-[11px] text-[color:var(--gold-deep)]">
               The countdown begins
             </p>
-            <div className="mt-6 grid grid-cols-4 gap-4 sm:gap-8">
+            <div className="mt-6 grid grid-cols-4 gap-2 sm:gap-8">
               {[
                 { v: c.d, l: "Days" },
                 { v: c.h, l: "Hours" },
-                { v: c.m, l: "Minutes" },
-                { v: c.s, l: "Seconds" },
+                { v: c.m, l: "Min" },
+                { v: c.s, l: "Sec" },
               ].map((u) => (
                 <div key={u.l} className="text-center">
-                  <div className="font-display text-5xl text-[color:var(--violet-deep)] sm:text-6xl tabular-nums">
+                  <div className="font-display text-4xl tabular-nums text-[color:var(--violet-deep)] sm:text-6xl">
                     {c.ready ? String(u.v).padStart(2, "0") : "—"}
                   </div>
-                  <div className="hairline mt-2 text-[10px] text-muted-foreground">
-                    {u.l}
-                  </div>
+                  <div className="hairline mt-2 text-[10px] text-muted-foreground">{u.l}</div>
                 </div>
               ))}
             </div>
-            <Ornament className="mt-10 h-3 w-48 text-[color:var(--gold-deep)]" />
-            <p className="font-serif-display mt-8 max-w-lg text-2xl italic leading-snug text-[color:var(--violet-deep)]/80">
+            <Ornament className="mt-8 h-3 w-40 text-[color:var(--gold-deep)] sm:mt-10 sm:w-48" />
+            <p className="font-serif-display mt-6 max-w-lg text-xl italic leading-snug text-[color:var(--violet-deep)]/80 sm:text-2xl">
               "Your presence will make this milestone even more special."
             </p>
           </div>
@@ -253,29 +334,77 @@ export default function Invite() {
             className="relative"
           >
             <div className="absolute -inset-6 rounded-3xl bg-gradient-violet opacity-15 blur-3xl" />
-            <div className="relative rounded-2xl border border-[color:var(--gold)]/40 bg-card/80 p-10 shadow-elegant backdrop-blur">
+            <div className="relative rounded-2xl border border-[color:var(--gold)]/40 bg-card/80 p-6 shadow-elegant backdrop-blur sm:p-10">
               <p className="hairline text-[11px] text-[color:var(--gold-deep)]">
                 Kindly Respond
               </p>
-              <h3 className="font-display mt-4 text-4xl text-[color:var(--violet-deep)]">
+              <h3 className="font-display mt-3 text-3xl text-[color:var(--violet-deep)] sm:mt-4 sm:text-4xl">
                 Reserve your seat
               </h3>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:mt-4 sm:text-sm">
                 Please RSVP by May 1st so we may set a place for you at this once-in-a-lifetime celebration.
               </p>
+
               <a
                 href={RSVP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-8 inline-flex items-center justify-between gap-6 rounded-full bg-gradient-violet px-8 py-5 text-primary-foreground shadow-gold transition-transform hover:-translate-y-0.5"
+                className="group mt-6 flex w-full items-center justify-between gap-4 rounded-full bg-gradient-violet px-6 py-5 text-primary-foreground shadow-gold transition-transform hover:-translate-y-0.5 sm:px-8"
               >
-                <span className="hairline text-xs">RSVP via Google Forms</span>
+                <span className="hairline text-xs sm:text-sm">RSVP — Google Form</span>
                 <ArrowUpRight
                   className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-                  strokeWidth={1.5}
+                  strokeWidth={1.6}
                 />
               </a>
-              <p className="mt-6 text-xs text-muted-foreground">
+
+              {/* Add to calendar */}
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => setCalOpen((o) => !o)}
+                  aria-expanded={calOpen}
+                  className="flex w-full items-center justify-between gap-4 rounded-full border border-[color:var(--violet)]/40 bg-background/60 px-6 py-5 text-[color:var(--violet-deep)] transition-colors hover:bg-secondary sm:px-8"
+                >
+                  <span className="hairline text-xs sm:text-sm">Add to calendar</span>
+                  <CalendarPlus className="h-5 w-5" strokeWidth={1.6} />
+                </button>
+                {calOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="mt-3 grid grid-cols-1 gap-2 overflow-hidden sm:grid-cols-2"
+                  >
+                    <a
+                      href={GCAL_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl border border-border bg-background px-4 py-4 text-center text-sm font-medium text-[color:var(--violet-deep)] hover:border-[color:var(--gold)]"
+                    >
+                      Google Calendar
+                    </a>
+                    <a
+                      href={ICS_HREF}
+                      download="joyce-kawesa-90th-birthday.ics"
+                      className="rounded-xl border border-border bg-background px-4 py-4 text-center text-sm font-medium text-[color:var(--violet-deep)] hover:border-[color:var(--gold)]"
+                    >
+                      Apple / Outlook (.ics)
+                    </a>
+                  </motion.div>
+                )}
+              </div>
+
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 flex w-full items-center justify-between gap-4 rounded-full border border-[color:var(--gold)]/50 bg-background/60 px-6 py-5 text-[color:var(--violet-deep)] transition-colors hover:bg-secondary sm:px-8"
+              >
+                <span className="hairline text-xs sm:text-sm">Get directions</span>
+                <Navigation className="h-5 w-5" strokeWidth={1.6} />
+              </a>
+
+              <p className="mt-6 text-center text-xs text-muted-foreground">
                 With love, <span className="italic">The Kawesa Family</span>
               </p>
             </div>
@@ -283,11 +412,44 @@ export default function Invite() {
         </div>
       </section>
 
-      <footer className="relative z-10 border-t border-[color:var(--gold)]/30 px-6 py-10 text-center sm:px-12">
+      <footer className="relative z-10 border-t border-[color:var(--gold)]/30 px-5 py-8 text-center sm:px-12 sm:py-10">
         <p className="hairline text-[10px] text-muted-foreground">
           Joyce Kawesa · Ninety Years · 1936 — 2026
         </p>
       </footer>
+
+      {/* MOBILE STICKY RSVP */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--gold)]/40 bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden">
+        <div className="flex items-center gap-2">
+          <a
+            href={RSVP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-violet px-4 py-3.5 text-sm font-medium text-primary-foreground shadow-gold"
+          >
+            RSVP <ArrowUpRight className="h-4 w-4" strokeWidth={1.8} />
+          </a>
+          <a
+            href={GCAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Add to Google Calendar"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-[color:var(--violet)]/40 bg-background text-[color:var(--violet-deep)]"
+          >
+            <CalendarPlus className="h-5 w-5" strokeWidth={1.6} />
+          </a>
+          <a
+            href={MAPS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open location in Google Maps"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-background text-[color:var(--violet-deep)]"
+          >
+            <Navigation className="h-5 w-5" strokeWidth={1.6} />
+          </a>
+        </div>
+      </div>
+      <div className="h-20 lg:hidden" aria-hidden />
     </main>
   );
 }
