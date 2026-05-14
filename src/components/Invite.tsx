@@ -4,7 +4,7 @@ import { MapPin, Calendar, ArrowUpRight, CalendarPlus, Navigation } from "lucide
  * ✏️  To change the portrait, replace the file at src/assets/joyce-kawesa.jpg
  *     (or drop a new file in src/assets/ and update the path below).
  */
-import portrait from "@/assets/joyce-kawesa.jpg";
+import portrait from "@/assets/joyce-kawesa-portrait.png";
 import {
   Drawer,
   DrawerContent,
@@ -168,6 +168,28 @@ export default function Invite() {
         <Floral className="h-full w-full" />
       </div>
 
+      {/* ── Hero portrait — full-bleed behind the layout ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 1.02 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="invite-hero-portrait pointer-events-none"
+      >
+        <img
+          src={portrait}
+          alt="Joyce Kawesa, celebrating her 90th birthday"
+          className="h-full w-full object-cover"
+          style={{
+            objectPosition: "42% 20%",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent 0%, black 8%, black 48%, transparent 70%)",
+            maskImage:
+              "linear-gradient(to bottom, transparent 0%, black 8%, black 48%, transparent 70%)",
+          }}
+          loading="eager"
+        />
+      </motion.div>
+
       {/* ── SINGLE-SCREEN LAYOUT ── */}
       <div className="invite-layout relative z-10">
         {/* ─ ROW 1: Header ─ */}
@@ -199,24 +221,8 @@ export default function Invite() {
 
         {/* ─ ROW 3: Portrait + Title overlay ─ */}
         <div className="relative flex flex-col items-center">
-          {/* Portrait */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="invite-portrait relative"
-          >
-            <img
-              src={portrait}
-              alt="Joyce Kawesa, celebrating her 90th birthday"
-              className="relative w-full mix-blend-multiply dark:mix-blend-screen"
-              style={{
-                WebkitMaskImage: "linear-gradient(to bottom, black 25%, transparent 95%)",
-                maskImage: "linear-gradient(to bottom, black 25%, transparent 95%)",
-              }}
-              loading="eager"
-            />
-          </motion.div>
+          {/* Portrait spacer — real portrait is the hero behind the layout */}
+          <div className="invite-portrait" style={{ aspectRatio: "4 / 5" }} aria-hidden />
 
           {/* Title block — overlaps portrait bottom */}
           <div className="relative -mt-10 text-center sm:-mt-14">

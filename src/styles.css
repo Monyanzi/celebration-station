@@ -358,6 +358,19 @@
   width: min(50vw, 13rem);
 }
 
+.invite-hero-portrait {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: min(100vw, 30rem);
+  height: 60dvh;
+  z-index: 1;
+  overflow: hidden;
+}
+
 /* sm breakpoint */
 @media (min-width: 640px) {
   .invite-layout {
@@ -367,6 +380,10 @@
   }
   .invite-portrait {
     width: min(40vw, 18rem);
+  }
+  .invite-hero-portrait {
+    width: min(85vw, 36rem);
+    height: 65dvh;
   }
 }
 
@@ -379,5 +396,9 @@
   }
   .invite-portrait {
     width: min(28vw, 22rem);
+  }
+  .invite-hero-portrait {
+    width: min(55vw, 42rem);
+    height: 72dvh;
   }
 }
