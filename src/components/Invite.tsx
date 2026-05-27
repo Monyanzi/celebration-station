@@ -27,14 +27,14 @@ const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
 
 const EVENT_TITLE = "Joyce Kawesa's 90th Birthday Celebration";
 const EVENT_DETAILS =
-  "Please join us in celebrating Joyce Kawesa on her 90th birthday! A joyful gathering of love, faith and family. Formal dress code. Contact Monica at 301-500-4811. RSVP: " +
+  "Please join us in celebrating Joyce Kawesa on her 90th birthday! A joyful gathering of love, faith and family. Formal attire in neutral & earthy tones (rose gold, greys, browns, black, white). This is a SURPRISE — please be seated by 4:00 PM. Contact Monica at 301-500-4811. RSVP: " +
   RSVP_URL;
 const GCAL_URL =
   "https://calendar.google.com/calendar/render?" +
   new URLSearchParams({
     action: "TEMPLATE",
     text: EVENT_TITLE,
-    dates: "20260531T150000/20260531T190000",
+    dates: "20260531T150000/20260531T200000",
     details: EVENT_DETAILS,
     location: `${VENUE_NAME}, ${VENUE_ADDRESS}`,
   }).toString() +
@@ -55,7 +55,7 @@ const ICS_CONTENT = [
   "UID:joyce-kawesa-90-2026@invite",
   `DTSTAMP:${nowStamp}`,
   "DTSTART;TZID=America/New_York:20260531T150000",
-  "DTEND;TZID=America/New_York:20260531T190000",
+  "DTEND;TZID=America/New_York:20260531T200000",
   `SUMMARY:${icsEscape(EVENT_TITLE)}`,
   `LOCATION:${icsEscape(`${VENUE_NAME}, ${VENUE_ADDRESS}`)}`,
   `DESCRIPTION:${icsEscape(EVENT_DETAILS)}`,
@@ -288,7 +288,7 @@ export default function Invite() {
                       <p className="font-serif-display text-lg font-semibold text-[color:var(--violet-deep)] leading-tight sm:text-xl">
                         Sunday, May 31, 2026
                       </p>
-                      <p className="text-base text-muted-foreground sm:text-lg">3:00 PM – 7:00 PM</p>
+                      <p className="text-base text-muted-foreground sm:text-lg">3:00 PM – 8:00 PM</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 text-[color:var(--violet)] transition-transform duration-200 group-hover:translate-x-0.5">
@@ -303,6 +303,16 @@ export default function Invite() {
             </DrawerContent>
           </Drawer>
         </motion.div>
+
+        {/* ─ Seated-by notice ─ */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.78, duration: 0.4 }}
+          className="text-center text-xs font-semibold text-[color:var(--violet-deep)] sm:text-sm"
+        >
+          Please be seated by 4:00 PM
+        </motion.p>
 
         {/* ─ ROW 5: Location + Get Directions card ─ */}
         <motion.div
@@ -345,7 +355,14 @@ export default function Invite() {
           className="flex flex-col items-center gap-0.5"
         >
           <p className="text-sm text-muted-foreground sm:text-base">
-            Formal attire · Contact Monica{" "}
+            Formal attire · Dress to impress
+          </p>
+          <p className="text-xs text-muted-foreground/80 sm:text-sm">
+            Colours: rose gold, greys, browns, black & white
+          </p>
+
+          <p className="text-xs text-muted-foreground sm:text-sm mt-0.5">
+            Contact Monica{" "}
             <a
               href="tel:+13015004811"
               className="font-medium text-[color:var(--violet)] underline-offset-4 hover:underline"
