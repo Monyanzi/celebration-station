@@ -211,7 +211,7 @@ export default function Invite() {
             rel="noopener noreferrer"
             className="group relative flex w-full items-center justify-between rounded-full bg-gradient-violet px-6 py-3.5 text-primary-foreground shadow-gold transition-all duration-300 hover:shadow-[0_0_60px_oklch(0.74_0.13_80/0.6)] active:scale-[0.98] sm:py-4"
           >
-            <span className="hairline text-sm sm:text-base">Click here to RSVP · by May 15</span>
+            <span className="hairline text-sm sm:text-base">Click here to RSVP · by May 30</span>
             <ArrowUpRight
               className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
               strokeWidth={1.6}
